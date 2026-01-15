@@ -53,86 +53,97 @@ st.set_page_config(
 )
 
 # ============================================================================
-# ESTILOS CSS (DISEÑO FINAL ARREGLADO)
+# ESTILOS CSS (FINAL: TEXTOS MIXTOS BLANCO/NEGRO)
 # ============================================================================
 
 st.markdown("""
 <style>
-    /* 1. Importar Fuente Inter */
+    /* 1. CONFIGURACIÓN BÁSICA */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     html, body, [class*="css"], .stApp { font-family: 'Inter', sans-serif; }
 
-    /* 2. FONDO PRINCIPAL (CLARO) */
+    /* Fondo de la App (Claro) */
     .stApp {
         background: linear-gradient(135deg, #f5f7fa 0%, #f9fafb 100%);
         color: #000000 !important;
     }
 
-    /* 3. BARRA LATERAL (OSCURA) */
+    /* Fondo de la Sidebar (Oscuro) */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1d29 0%, #252938 100%);
         border-right: 1px solid #2d3748;
     }
-    /* Títulos sueltos de la sidebar en blanco */
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
+
+    /* ----------------------------------------------------------- */
+    /* 2. REGLA DE ORO: TEXTO EN LA SIDEBAR -> BLANCO POR DEFECTO  */
+    /* ----------------------------------------------------------- */
+    /* Esto arregla "Existing Titles" y textos sueltos */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] label, 
+    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] div {
         color: #ffffff !important;
     }
 
-    /* ================================================================= */
-    /* 4. SOLUCIÓN FINAL: TARJETAS BLANCAS FIJAS EN SIDEBAR */
-    /* ================================================================= */
-    
-    /* Forzamos "Settings" y "Source Data" a ser BLANCOS con texto NEGRO SIEMPRE */
-    /* Usamos !important en todos los estados (hover, focus) para que no parpadee */
-    
+    /* ----------------------------------------------------------- */
+    /* 3. EXCEPCIONES: COSAS QUE SON BLANCAS (TEXTO NEGRO)         */
+    /* ----------------------------------------------------------- */
+
+    /* A) BOTONES DESPLEGABLES (Settings / Source Data) */
+    /* Fondo BLANCO, Texto NEGRO (incluso en Hover) */
     [data-testid="stSidebar"] .streamlit-expanderHeader,
-    [data-testid="stSidebar"] .streamlit-expanderHeader:hover,
-    [data-testid="stSidebar"] .streamlit-expanderHeader:active,
-    [data-testid="stSidebar"] .streamlit-expanderHeader:focus {
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover {
         background-color: #ffffff !important;
-        color: #000000 !important;
-        border-radius: 6px;
-        border: 1px solid #e5e7eb;
+        border-radius: 6px !important;
         opacity: 1 !important;
     }
-
-    /* Textos e iconos dentro de la caja: SIEMPRE NEGROS */
+    
+    /* El texto DENTRO del botón desplegable -> NEGRO */
     [data-testid="stSidebar"] .streamlit-expanderHeader p,
     [data-testid="stSidebar"] .streamlit-expanderHeader span,
-    [data-testid="stSidebar"] .streamlit-expanderHeader svg,
     [data-testid="stSidebar"] .streamlit-expanderHeader:hover p,
-    [data-testid="stSidebar"] .streamlit-expanderHeader:hover span,
-    [data-testid="stSidebar"] .streamlit-expanderHeader:hover svg {
-        color: #000000 !important;
-        fill: #000000 !important;
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover span {
+        color: #000000 !important; 
         font-weight: 600 !important;
     }
-
-    /* Inputs (Cajas de escribir) -> Blancas */
-    [data-testid="stSidebar"] .stTextInput input,
-    [data-testid="stSidebar"] .stTextArea textarea {
-        background-color: #ffffff !important;
+    /* La flechita -> NEGRA */
+    [data-testid="stSidebar"] .streamlit-expanderHeader svg,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover svg {
+        fill: #000000 !important;
         color: #000000 !important;
-        border: 1px solid #ccc !important;
     }
 
-    /* File Uploader (Subir archivos) -> Blanco */
+    /* B) INPUTS (Cajas de escribir) -> Fondo BLANCO, Texto NEGRO */
+    [data-testid="stSidebar"] input,
+    [data-testid="stSidebar"] textarea {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    /* C) SUBIR ARCHIVOS (Caja Drag & Drop) -> Fondo BLANCO */
     [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
         background-color: #ffffff !important;
     }
-    /* Todo texto dentro del uploader en negro */
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] small,
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] div {
+    /* Textos DENTRO de la caja de subir -> NEGROS */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section span,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section small,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section div {
+        color: #000000 !important;
+    }
+    /* El botón "Browse files" -> Gris con texto negro */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] button {
+        background-color: #f1f5f9 !important;
         color: #000000 !important;
     }
 
-    /* ================================================================= */
-    /* 5. RESTO DEL DISEÑO (BOTONES Y TARJETAS) */
-    /* ================================================================= */
-    
-    /* Encabezados principales */
+    /* ----------------------------------------------------------- */
+    /* 4. RESTO DEL DISEÑO (MAIN AREA)                             */
+    /* ----------------------------------------------------------- */
     .main h1, .main h2, .main h3 { color: #1a1d29 !important; }
+    
     h1 {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
@@ -140,32 +151,24 @@ st.markdown("""
         background-clip: text;
     }
 
-    /* Botones Violetas */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
-    }
-    .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
     }
 
-    /* Tarjetas de contenido */
     .strategy-card, .result-card {
         background: white;
         padding: 1.5rem;
         border-radius: 12px;
         border: 1px solid #e5e7eb;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         color: #000000 !important;
     }
+    /* Textos dentro de tarjetas main -> Oscuros */
     .strategy-card div, .result-card div { color: #1f2937 !important; }
     
-    /* Pestañas (Tabs) */
     .stTabs [data-baseweb="tab"] {
         background: white; border: 1px solid #e5e7eb; color: #000000 !important;
     }
@@ -174,7 +177,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
 # ============================================================================
 # INITIALIZE SESSION STATE
 # ============================================================================
