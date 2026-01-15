@@ -53,7 +53,7 @@ st.set_page_config(
 )
 
 # ============================================================================
-# PREMIUM FINTECH/SAAS CSS STYLING (CORREGIDO SIDEBAR)
+# PREMIUM FINTECH/SAAS CSS STYLING (CORREGIDO SIDEBAR + EXPANDERS)
 # ============================================================================
 
 st.markdown("""
@@ -69,7 +69,7 @@ st.markdown("""
     /* Main App Background - Subtle Gradient (Light Mode) */
     .stApp {
         background: linear-gradient(135deg, #f5f7fa 0%, #f9fafb 100%);
-        color: #000000 !important; /* Texto principal en negro para contraste */
+        color: #000000 !important; /* Texto principal en negro */
     }
 
     /* ============================================================ */
@@ -84,7 +84,6 @@ st.markdown("""
     }
 
     /* 2. FORZAR TODOS LOS TEXTOS DE LA SIDEBAR A BLANCO */
-    /* Esto arregla los títulos "Settings", "Source Data" que no se veían */
     [data-testid="stSidebar"] h1, 
     [data-testid="stSidebar"] h2, 
     [data-testid="stSidebar"] h3, 
@@ -94,21 +93,41 @@ st.markdown("""
     [data-testid="stSidebar"] div {
         color: #ffffff !important;
     }
-
-    /* 3. Arreglo específico para los Títulos de los Desplegables (Expander) */
-    [data-testid="stSidebar"] .streamlit-expanderHeader p,
-    [data-testid="stSidebar"] [data-testid="stExpander"] summary span {
-        color: #ffffff !important;
-        font-weight: 600 !important;
+    
+    /* ------------------------------------------------------------ */
+    /* ARREGLO CRÍTICO DE DESPLEGABLES (SETTINGS / SOURCE DATA)     */
+    /* ESTO SOLUCIONA QUE SE VEAN BLANCOS                         */
+    /* ------------------------------------------------------------ */
+    
+    /* Forzamos que la cabecera del desplegable sea OSCURA */
+    [data-testid="stSidebar"] .streamlit-expanderHeader {
+        background-color: #252938 !important; /* Fondo oscuro */
+        color: #ffffff !important;             /* Texto blanco */
+        border: 1px solid #4b5563 !important;  /* Borde gris */
     }
     
-    /* 4. Iconos (flechitas) en la sidebar a blanco */
-    [data-testid="stSidebar"] svg {
+    /* Aseguramos que el texto dentro del header sea blanco */
+    [data-testid="stSidebar"] .streamlit-expanderHeader p,
+    [data-testid="stSidebar"] .streamlit-expanderHeader span {
+        color: #ffffff !important;
+    }
+    
+    /* El icono de la flechita a blanco */
+    [data-testid="stSidebar"] .streamlit-expanderHeader svg {
         fill: #ffffff !important;
         color: #ffffff !important;
     }
+    
+    /* El contenido interior del desplegable también oscuro */
+    [data-testid="stSidebar"] [data-testid="stExpander"] {
+        background-color: transparent !important;
+        border: none !important;
+        color: #ffffff !important;
+    }
+    
+    /* ------------------------------------------------------------ */
 
-    /* 5. Inputs dentro de la sidebar (Cajas de texto y API Key) */
+    /* Inputs dentro de la sidebar (Cajas de texto y API Key) */
     [data-testid="stSidebar"] .stTextInput input,
     [data-testid="stSidebar"] .stTextArea textarea {
         background-color: #2c3345 !important; /* Fondo gris azulado oscuro */
@@ -116,8 +135,7 @@ st.markdown("""
         border: 1px solid #4b5563 !important;
     }
     
-    /* 6. Arreglo para la caja de Subir Archivos (File Uploader) */
-    /* Fondo oscuro para la zona de drop, texto blanco */
+    /* Arreglo para la caja de Subir Archivos (File Uploader) */
     [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
         background-color: #2c3345 !important;
     }
@@ -130,7 +148,7 @@ st.markdown("""
     /* ESTILOS DEL ÁREA PRINCIPAL (MAIN) */
     /* ============================================================ */
 
-    /* Premium Button Styling - Gradient CTAs */
+    /* Premium Button Styling */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
@@ -139,10 +157,7 @@ st.markdown("""
         padding: 0.75rem 2rem !important;
         font-weight: 600 !important;
         font-size: 1rem !important;
-        letter-spacing: 0.3px !important;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
-        transition: all 0.3s ease !important;
-        text-transform: none !important;
     }
 
     .stButton > button:hover {
@@ -156,12 +171,9 @@ st.markdown("""
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
-        padding: 0.6rem 1.5rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 3px 12px rgba(245, 87, 108, 0.3) !important;
     }
 
-    /* Card Styling for Results */
+    /* Card Styling */
     .strategy-card {
         background: white;
         border-radius: 12px;
@@ -180,7 +192,7 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* Header Styling - Aseguramos que los títulos principales sean oscuros */
+    /* Header Styling */
     .main h1, .main h2, .main h3 {
         color: #1a1d29 !important;
         font-family: 'Inter', sans-serif !important;
@@ -312,420 +324,4 @@ def combine_guidelines(file_content, manual_content):
     if manual_content.strip():
         combined.append(manual_content.strip())
 
-    return "\n\n".join(combined)
-
-# ============================================================================
-# HELPER FUNCTIONS - AI CLIENT
-# ============================================================================
-
-def get_anthropic_client(api_key_input):
-    """Initialize and return Anthropic client."""
-    # First, check if user entered a key in the sidebar
-    if api_key_input and api_key_input.strip():
-        try:
-            return anthropic.Anthropic(api_key=api_key_input.strip())
-        except Exception as e:
-            st.error(f"Error with provided API key: {e}")
-            return None
-
-    # If not, try to load from secrets
-    try:
-        api_key = st.secrets["anthropic"]["api_key"]
-        if api_key and api_key != "your-anthropic-api-key-here":
-            return anthropic.Anthropic(api_key=api_key)
-    except Exception:
-        pass
-
-    # If neither exists, show warning
-    st.warning("⚠️ Please enter your Anthropic API Key in the Settings section of the sidebar.")
-    st.stop()
-    return None
-
-def generate_strategies(existing_titles, guidelines, api_key_input):
-    """Generate 10 new content strategy titles using Claude Haiku."""
-    client = get_anthropic_client(api_key_input)
-    if not client:
-        return []
-
-    prompt = f"""You are an expert SEO strategist for fan token trading content.
-
-EXISTING TITLES (to avoid repetition):
-{existing_titles if existing_titles.strip() else "None provided"}
-
-STRATEGIC GUIDELINES:
-{guidelines}
-
-Your task: Generate EXACTLY 10 new article titles that:
-1. Appeal to TRADERS (not just fans)
-2. Emphasize volatility, opportunity, and money-making potential
-3. Focus on low correlation with crypto markets
-4. Avoid repeating themes from existing titles
-5. Use authoritative, financial tone ("Typically", "Tend to", etc.)
-6. Range across all three levels: Top (unique asset class), Mid (digital stocks), Tactical (daily setups)
-
-Format your response as a numbered list (1-10) with ONLY the titles, one per line.
-Do not include any additional explanation or commentary."""
-
-    try:
-        message = client.messages.create(
-            model="claude-haiku-4-20250131",
-            max_tokens=1024,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        response_text = message.content[0].text
-        titles = [line.strip() for line in response_text.split('\n') if line.strip() and line.strip()[0].isdigit()]
-
-        # Clean up numbering
-        cleaned_titles = []
-        for title in titles:
-            # Remove leading numbers and dots/parentheses
-            cleaned = title.split('.', 1)[-1].split(')', 1)[-1].strip()
-            if cleaned:
-                cleaned_titles.append(cleaned)
-
-        return cleaned_titles[:10]
-
-    except Exception as e:
-        st.error(f"Error generating strategies: {e}")
-        return []
-
-def generate_brief(title, template, guidelines, api_key_input):
-    """Generate a full content brief for a selected title."""
-    client = get_anthropic_client(api_key_input)
-    if not client:
-        return ""
-
-    prompt = f"""You are an expert SEO content strategist creating detailed content briefs for fan token trading articles.
-
-ARTICLE TITLE:
-{title}
-
-STRATEGIC GUIDELINES:
-{guidelines}
-
-BRIEF TEMPLATE STRUCTURE TO FOLLOW:
-{template}
-
-Your task: Create a comprehensive content brief for this article that STRICTLY follows the template structure provided above.
-
-Requirements:
-1. Fill in ALL sections from the template
-2. Target Audience: Be specific about trader personas
-3. Tone: Match the authoritative, financial opportunity tone
-4. Create a detailed content outline with multiple H2 sections
-5. Include specific key points, analogies, and examples for each section
-6. Provide a keywords table with relevant search terms
-7. Add comprehensive LLM optimization notes on how to write this content
-8. Ensure the brief emphasizes trader value, volatility opportunities, and low correlation with crypto
-9. Avoid the 'match results drive price' narrative
-
-Generate a complete, actionable brief that a writer or LLM can use to create high-quality content."""
-
-    try:
-        message = client.messages.create(
-            model="claude-haiku-4-20250131",
-            max_tokens=4096,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        return message.content[0].text
-
-    except Exception as e:
-        st.error(f"Error generating brief: {e}")
-        return ""
-
-# ============================================================================
-# MAIN APP INTERFACE - HEADER
-# ============================================================================
-
-st.markdown("""
-<div style='text-align: center; padding: 2rem 0 1rem 0;'>
-    <div style='display: inline-flex; align-items: center; gap: 1rem; margin-bottom: 1rem;'>
-        <div style='font-size: 3.5rem; filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.3));'>
-            💎
-        </div>
-        <h1 style='font-size: 2.8rem; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px;'>
-            Fan Token SEO Planner
-        </h1>
-    </div>
-    <p style='font-size: 1.15rem; color: #6b7280; margin-top: 0.5rem; font-weight: 500;'>
-        AI-Powered Content Strategy for Trader-Focused Fan Token Markets
-    </p>
-    <div style='display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; font-size: 0.9rem; color: #9ca3af;'>
-        <span>⚡ Claude Haiku 4</span>
-        <span>•</span>
-        <span>🎯 SEO Optimized</span>
-        <span>•</span>
-        <span>📊 Data-Driven</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("---")
-
-# ============================================================================
-# SIDEBAR - PRO DESIGN WITH EXPANDERS
-# ============================================================================
-
-with st.sidebar:
-    st.markdown("### ⚙️ Configuration Panel")
-    st.markdown("")
-
-    # ========== SETTINGS EXPANDER ==========
-    with st.expander("⚙️ Settings", expanded=True):
-        api_key_input = st.text_input(
-            "Anthropic API Key",
-            type="password",
-            help="Enter your Anthropic API key or configure it in .streamlit/secrets.toml"
-        )
-
-    # ========== SOURCE DATA EXPANDER ==========
-    with st.expander("📂 Source Data", expanded=True):
-        st.markdown("**Existing Titles**")
-        st.caption("Upload a file or paste titles manually to avoid repetition")
-
-        # File uploader for titles
-        titles_file = st.file_uploader(
-            "Upload Titles (CSV/Excel)",
-            type=['csv', 'xlsx', 'xls'],
-            help="First column will be used as titles",
-            key="titles_file"
-        )
-
-        # Manual titles input
-        manual_titles = st.text_area(
-            "Or paste titles here (one per line)",
-            height=100,
-            placeholder="Paste existing article titles...",
-            key="manual_titles"
-        )
-
-        # Process and combine titles
-        file_titles = load_titles_from_file(titles_file) if titles_file else []
-        all_titles = combine_titles(file_titles, manual_titles)
-
-        if all_titles:
-            st.success(f"✅ {len(all_titles)} unique titles loaded")
-
-    # ========== STRATEGIC GUIDELINES EXPANDER ==========
-    with st.expander("🧠 Strategic Guidelines", expanded=False):
-        st.markdown("**Content Strategy Guidelines**")
-        st.caption("Upload guidelines or edit the default template")
-
-        # File uploader for guidelines
-        guidelines_file = st.file_uploader(
-            "Upload Guidelines (TXT/MD)",
-            type=['txt', 'md'],
-            help="Upload your strategic guidelines file",
-            key="guidelines_file"
-        )
-
-        # Manual guidelines input
-        manual_guidelines = st.text_area(
-            "Strategic Guidelines",
-            value=DEFAULT_GUIDELINES,
-            height=250,
-            help="These guidelines drive the content strategy generation"
-        )
-
-        # Combine guidelines
-        file_guidelines = load_guidelines_from_file(guidelines_file) if guidelines_file else ""
-        final_guidelines = combine_guidelines(file_guidelines, manual_guidelines)
-
-    # ========== BRIEF TEMPLATE EXPANDER ==========
-    with st.expander("📝 Brief Template", expanded=False):
-        st.markdown("**Content Brief Structure**")
-
-        brief_template = st.text_area(
-            "Brief Template",
-            value=DEFAULT_TEMPLATE,
-            height=250,
-            help="This template structure will be used for generating content briefs"
-        )
-
-# ============================================================================
-# MAIN CONTENT AREA - PRO DESIGN
-# ============================================================================
-
-# Create two-column layout
-col1, col2 = st.columns([1, 1], gap="large")
-
-with col1:
-    st.markdown("### 🚀 Step 1: Generate Strategy Ideas")
-    st.markdown("Generate 10 AI-powered article titles tailored to your trader audience.")
-
-    if st.button("🎲 Generate 10 New Strategies", use_container_width=True, type="primary"):
-        # Convert all_titles list to string for prompt
-        existing_titles_str = "\n".join(all_titles) if all_titles else ""
-
-        with st.status("Generating strategies...", expanded=True) as status:
-            st.write("🔍 Analyzing existing content...")
-            st.write("🤖 Consulting Claude Haiku...")
-            st.write("✨ Generating unique titles...")
-
-            strategies = generate_strategies(existing_titles_str, final_guidelines, api_key_input)
-
-            if strategies:
-                st.session_state.generated_strategies = strategies
-                st.session_state.selected_strategies = []
-                st.session_state.generated_briefs = {}
-                status.update(label="✅ Generation complete!", state="complete")
-            else:
-                status.update(label="❌ Generation failed", state="error")
-
-    # Display generated strategies
-    if st.session_state.generated_strategies:
-        st.markdown("---")
-        st.markdown("#### 📋 Generated Titles")
-        st.info("Select the titles you want to create detailed briefs for")
-
-        selected = []
-
-        # Display in a nice card-like format with custom styling
-        for idx, title in enumerate(st.session_state.generated_strategies):
-            # Use custom HTML for card styling
-            st.markdown(f"""
-            <div class="strategy-card">
-                <div style="display: flex; align-items: start; gap: 1rem;">
-                    <div style="font-weight: 700; color: #667eea; font-size: 1.1rem; min-width: 30px;">
-                        {idx + 1}.
-                    </div>
-                    <div style="flex: 1; font-size: 0.95rem; line-height: 1.6; color: #1f2937;">
-                        {title}
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # Checkbox below the card
-            is_checked = st.checkbox(f"Select this title", key=f"strategy_{idx}", label_visibility="collapsed")
-
-            if is_checked:
-                selected.append(title)
-
-        st.session_state.selected_strategies = selected
-
-        if selected:
-            st.success(f"✅ {len(selected)} title(s) selected for brief generation")
-
-with col2:
-    st.markdown("### 📄 Step 2: Generate Content Briefs")
-    st.markdown("Create detailed, structured content briefs for selected titles.")
-
-    if st.session_state.selected_strategies:
-        if st.button("📝 Generate Briefs for Selected", use_container_width=True, type="primary"):
-            with st.status(f"Generating {len(st.session_state.selected_strategies)} brief(s)...", expanded=True) as status:
-                progress_bar = st.progress(0)
-
-                for idx, title in enumerate(st.session_state.selected_strategies):
-                    st.write(f"📝 Generating brief {idx + 1}/{len(st.session_state.selected_strategies)}: {title[:50]}...")
-
-                    brief = generate_brief(title, brief_template, final_guidelines, api_key_input)
-                    if brief:
-                        st.session_state.generated_briefs[title] = brief
-
-                    progress_bar.progress((idx + 1) / len(st.session_state.selected_strategies))
-
-                if st.session_state.generated_briefs:
-                    status.update(label=f"✅ Generated {len(st.session_state.generated_briefs)} brief(s)!", state="complete")
-    else:
-        st.info("👈 Select strategies from Step 1 to generate briefs")
-
-# ============================================================================
-# RESULTS DISPLAY - PRO DESIGN
-# ============================================================================
-
-if st.session_state.generated_briefs:
-    st.markdown("---")
-    st.markdown("## 📊 Generated Content Briefs")
-
-    # Export options at the top
-    col_exp1, col_exp2, col_exp3 = st.columns([1, 1, 2])
-
-    with col_exp1:
-        st.metric("Total Briefs", len(st.session_state.generated_briefs))
-
-    with col_exp2:
-        # Download all briefs as CSV
-        if len(st.session_state.generated_briefs) > 0:
-            df = pd.DataFrame([
-                {"Title": title, "Brief": brief}
-                for title, brief in st.session_state.generated_briefs.items()
-            ])
-            csv = df.to_csv(index=False)
-            st.download_button(
-                label="📥 Download All (CSV)",
-                data=csv,
-                file_name="fan_token_content_briefs.csv",
-                mime="text/csv",
-                use_container_width=True
-            )
-
-    st.markdown("---")
-
-    # Create tabs for each brief
-    if len(st.session_state.generated_briefs) == 1:
-        title = list(st.session_state.generated_briefs.keys())[0]
-
-        # Wrap in result card
-        st.markdown('<div class="result-card">', unsafe_allow_html=True)
-        st.markdown(f"### 📝 {title}")
-        st.markdown(st.session_state.generated_briefs[title])
-
-        # Download button
-        st.download_button(
-            label="💾 Download Brief (Markdown)",
-            data=st.session_state.generated_briefs[title],
-            file_name=f"{title[:50]}.md",
-            mime="text/markdown",
-            use_container_width=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        # Create tabs with abbreviated names
-        tab_names = [f"Brief {i+1}" for i in range(len(st.session_state.generated_briefs))]
-        tabs = st.tabs(tab_names)
-
-        for idx, (title, brief) in enumerate(st.session_state.generated_briefs.items()):
-            with tabs[idx]:
-                # Wrap each tab content in a result card
-                st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                st.markdown(f"### 📝 {title}")
-
-                # Brief content in an expandable container
-                with st.expander("📄 View Full Brief", expanded=True):
-                    st.markdown(brief)
-
-                # Download button
-                col_dl1, col_dl2 = st.columns([1, 3])
-                with col_dl1:
-                    st.download_button(
-                        label="💾 Download",
-                        data=brief,
-                        file_name=f"{title[:50]}.md",
-                        mime="text/markdown",
-                        key=f"download_{idx}",
-                        use_container_width=True
-                    )
-                st.markdown('</div>', unsafe_allow_html=True)
-
-# ============================================================================
-# FOOTER
-# ============================================================================
-
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #888; font-size: 0.9rem; padding: 1rem 0;'>
-    <p>
-        Fan Token SEO Strategy Planner | Powered by
-        <a href='https://www.anthropic.com/' target='_blank' style='color: #666; text-decoration: none;'>
-            Claude Haiku 4
-        </a>
-    </p>
-</div>
-""", unsafe_allow_html=True)
+    return "\
