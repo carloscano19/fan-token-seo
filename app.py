@@ -52,135 +52,80 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# PREMIUM DARK BLUE THEME CSS
-# ============================================================================
-
+# --- FIXED DARK THEME (CORREGIDO) ---
 st.markdown("""
 <style>
-    /* Import Inter Font from Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-    /* Global Font Application */
+    /* 1. FUENTES Y COLORES GLOBALES */
     html, body, [class*="css"], .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #ffffff !important;
+        font-family: 'Inter', sans-serif;
+        color: #e0e7ff !important; /* Texto blanco-azulado muy legible */
     }
 
-    /* 1. Fondo Principal (Main Background) - Azul Oscuro Profundo */
+    /* 2. FONDO PRINCIPAL (AZUL PROFUNDO UNIFORME) */
     .stApp {
-        background-color: #0f1117; /* Fondo muy oscuro */
-        background-image: radial-gradient(circle at 50% 0%, #1a1f2e 0%, #0f1117 100%);
+        background-color: #0f1117;
     }
 
-    /* 2. Sidebar Premium Styling - Azul Noche */
+    /* 3. ARREGLO DE CAJAS DE TEXTO (INPUTS) - ¡CRÍTICO! */
+    /* Esto fuerza que el fondo de donde escribes sea oscuro */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        background-color: #1f2937 !important;
+        color: #ffffff !important;
+        border: 1px solid #374151 !important;
+    }
+    /* El texto "Paste existing..." que ahora no se ve, se verá gris claro */
+    ::placeholder {
+        color: #9ca3af !important;
+        opacity: 1 !important;
+    }
+
+    /* 4. ARREGLO DEL CARGADOR DE ARCHIVOS (La caja blanca fea) */
+    [data-testid="stFileUploader"] {
+        background-color: #1f2937 !important;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    [data-testid="stFileUploader"] section {
+        background-color: #1f2937 !important;
+    }
+    /* Forzar textos pequeños del uploader a blanco */
+    [data-testid="stFileUploader"] span, [data-testid="stFileUploader"] small, [data-testid="stFileUploader"] div {
+        color: #e0e7ff !important;
+    }
+
+    /* 5. SIDEBAR (Barra lateral) */
     [data-testid="stSidebar"] {
         background-color: #0a0c10;
         border-right: 1px solid #1f2937;
     }
 
-    /* Forzar textos de la Sidebar a blanco */
-    [data-testid="stSidebar"] * {
-        color: #e0e7ff !important;
-    }
-
-    /* Títulos en Sidebar */
-    [data-testid="stSidebar"] .stMarkdown h3 {
-        color: #ffffff !important;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
-
-    /* 3. Estilo de Inputs (Cajas de texto) - Adaptadas a modo oscuro */
-    .stTextInput > div > div > input,
-    .stTextArea textarea {
-        background-color: #1f2937 !important; /* Fondo gris azulado oscuro */
-        color: #ffffff !important; /* Texto blanco al escribir */
-        border: 1px solid #374151 !important;
-        border-radius: 10px !important;
-    }
-
-    .stTextInput > div > div > input:focus,
-    .stTextArea textarea:focus {
-        border-color: #6366f1 !important; /* Borde índigo al hacer click */
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
-    }
-    
-    /* Etiquetas de los inputs */
-    label, .stTextInput label, .stTextArea label {
-        color: #9ca3af !important; /* Gris claro para las etiquetas */
-    }
-
-    /* 4. Botones Premium - Gradient Blue/Purple */
+    /* 6. BOTONES (Paso 1 y Paso 2 IGUALES DE BRILLANTES) */
     .stButton > button {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
         color: white !important;
+        font-weight: bold !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 2rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4) !important;
-        transition: all 0.3s ease !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 1.5rem !important;
+        transition: all 0.3s ease;
     }
-
     .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5) !important;
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5) !important;
     }
 
-    /* 5. Tarjetas de Estrategia (Strategy Cards) - Modo Oscuro */
+    /* 7. TARJETAS DE RESULTADOS */
     .strategy-card {
-        background: #1f2937; /* Gris azulado oscuro */
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin: 0.75rem 0;
+        background-color: #1f2937;
         border: 1px solid #374151;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
     }
-    
-    .strategy-card h3, .strategy-card p, .strategy-card strong {
-        color: #ffffff !important;
-    }
-
-    /* 6. Títulos Principales */
-    h1, h2, h3 {
-        color: #ffffff !important;
-    }
-
-    h1 {
-        background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    /* 7. Métricas y Status */
-    [data-testid="stMetric"] {
-        background: #1f2937;
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid #374151;
-    }
-    [data-testid="stMetricValue"] {
-        color: #818cf8 !important; /* Color índigo claro para el número */
-    }
-
-    /* 8. Scrollbar Personalizado (Para que no salga blanco feo) */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-        background: #0f1117;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #374151;
-        border-radius: 5px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #4b5563;
-    }
+    h1, h2, h3 { color: #ffffff !important; }
 </style>
 """, unsafe_allow_html=True)
-
-# ============================================================================
+# ---------------------------------------------------------
 # INITIALIZE SESSION STATE
 # ============================================================================
 
