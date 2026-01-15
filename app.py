@@ -53,7 +53,7 @@ st.set_page_config(
 )
 
 # ============================================================================
-# PREMIUM FINTECH/SAAS CSS STYLING
+# PREMIUM FINTECH/SAAS CSS STYLING (CORREGIDO SIDEBAR)
 # ============================================================================
 
 st.markdown("""
@@ -66,33 +66,69 @@ st.markdown("""
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Main App Background - Subtle Gradient */
+    /* Main App Background - Subtle Gradient (Light Mode) */
     .stApp {
         background: linear-gradient(135deg, #f5f7fa 0%, #f9fafb 100%);
+        color: #000000 !important; /* Texto principal en negro para contraste */
     }
 
-    /* Sidebar Premium Styling */
+    /* ============================================================ */
+    /* SIDEBAR STYLING - ARREGLO DE COLORES */
+    /* ============================================================ */
+    
+    /* 1. Fondo de la barra lateral (Azul Oscuro Elegante) */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1d29 0%, #252938 100%);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        border-right: 1px solid #2d3748;
     }
 
-    [data-testid="stSidebar"] * {
-        color: #e8eaed !important;
-    }
-
-    [data-testid="stSidebar"] .stMarkdown h3 {
+    /* 2. FORZAR TODOS LOS TEXTOS DE LA SIDEBAR A BLANCO */
+    /* Esto arregla los títulos "Settings", "Source Data" que no se veían */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] label, 
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div {
         color: #ffffff !important;
-        font-weight: 700;
-        letter-spacing: -0.5px;
     }
 
-    [data-testid="stSidebar"] .stTextInput label,
-    [data-testid="stSidebar"] .stTextArea label {
-        color: #c9cdd4 !important;
-        font-weight: 500;
-        font-size: 0.875rem;
+    /* 3. Arreglo específico para los Títulos de los Desplegables (Expander) */
+    [data-testid="stSidebar"] .streamlit-expanderHeader p,
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary span {
+        color: #ffffff !important;
+        font-weight: 600 !important;
     }
+    
+    /* 4. Iconos (flechitas) en la sidebar a blanco */
+    [data-testid="stSidebar"] svg {
+        fill: #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    /* 5. Inputs dentro de la sidebar (Cajas de texto y API Key) */
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] .stTextArea textarea {
+        background-color: #2c3345 !important; /* Fondo gris azulado oscuro */
+        color: #ffffff !important; /* Texto blanco al escribir */
+        border: 1px solid #4b5563 !important;
+    }
+    
+    /* 6. Arreglo para la caja de Subir Archivos (File Uploader) */
+    /* Fondo oscuro para la zona de drop, texto blanco */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
+        background-color: #2c3345 !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] small {
+        color: #e2e8f0 !important;
+    }
+
+    /* ============================================================ */
+    /* ESTILOS DEL ÁREA PRINCIPAL (MAIN) */
+    /* ============================================================ */
 
     /* Premium Button Styling - Gradient CTAs */
     .stButton > button {
@@ -114,11 +150,7 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
     }
 
-    .stButton > button:active {
-        transform: translateY(0px) !important;
-    }
-
-    /* Download Buttons - Secondary Style */
+    /* Download Buttons */
     .stDownloadButton > button {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
         color: white !important;
@@ -127,12 +159,6 @@ st.markdown("""
         padding: 0.6rem 1.5rem !important;
         font-weight: 600 !important;
         box-shadow: 0 3px 12px rgba(245, 87, 108, 0.3) !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .stDownloadButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4) !important;
     }
 
     /* Card Styling for Results */
@@ -143,13 +169,6 @@ st.markdown("""
         margin: 0.75rem 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-
-    .strategy-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-        border-color: #667eea;
     }
 
     .result-card {
@@ -161,12 +180,10 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* Header Styling */
-    h1, h2, h3 {
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.8px !important;
+    /* Header Styling - Aseguramos que los títulos principales sean oscuros */
+    .main h1, .main h2, .main h3 {
         color: #1a1d29 !important;
+        font-family: 'Inter', sans-serif !important;
     }
 
     h1 {
@@ -184,132 +201,25 @@ st.markdown("""
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     }
-
     [data-testid="stMetric"] label {
         color: rgba(255, 255, 255, 0.9) !important;
-        font-weight: 600 !important;
     }
-
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         color: white !important;
-        font-size: 2.5rem !important;
-        font-weight: 800 !important;
-    }
-
-    /* Info/Success/Warning Boxes */
-    .stAlert {
-        border-radius: 12px !important;
-        border: none !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-    }
-
-    /* Expander Styling */
-    .streamlit-expanderHeader {
-        background: rgba(102, 126, 234, 0.1) !important;
-        border-radius: 10px !important;
-        font-weight: 600 !important;
-        color: white !important;
-    }
-
-    [data-testid="stExpander"] {
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        overflow: hidden;
-    }
-
-    /* Input Fields */
-    .stTextInput > div > div > input,
-    .stTextArea textarea {
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-
-    .stTextInput > div > div > input:focus,
-    .stTextArea textarea:focus {
-        border-color: #667eea !important;
-        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
     }
 
     /* Tabs Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: transparent;
-    }
-
     .stTabs [data-baseweb="tab"] {
         background: white;
         border-radius: 10px 10px 0 0;
         padding: 12px 24px;
         font-weight: 600;
         border: 1px solid #e5e7eb;
-        border-bottom: none;
+        color: #000000 !important;
     }
-
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-color: transparent;
-    }
-
-    /* Progress Bar */
-    .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
-    }
-
-    /* Checkbox Styling */
-    .stCheckbox {
-        padding: 0.5rem 0;
-    }
-
-    /* File Uploader */
-    [data-testid="stFileUploader"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        padding: 1rem;
-        border: 2px dashed rgba(255, 255, 255, 0.2);
-    }
-
-    /* Status Container */
-    .stStatus {
-        background: white !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-    }
-
-    /* Divider */
-    hr {
-        margin: 2rem 0;
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-    }
-
-    /* Container Borders */
-    .element-container {
-        border-radius: 8px;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
