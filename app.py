@@ -53,48 +53,97 @@ st.set_page_config(
 )
 
 # ============================================================================
-# PREMIUM FINTECH/SAAS CSS STYLING
+# PREMIUM FINTECH CSS STYLING (FULL VERSION + FIX)
 # ============================================================================
 
 st.markdown("""
 <style>
-    /* Import Inter Font from Google Fonts */
+    /* 1. FUENTES GLOBALES */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-    /* Global Font Application */
     html, body, [class*="css"], .stApp {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Main App Background - Subtle Gradient */
+    /* 2. FONDO PRINCIPAL (CLARO) */
     .stApp {
         background: linear-gradient(135deg, #f5f7fa 0%, #f9fafb 100%);
+        color: #000000 !important;
     }
 
-    /* Sidebar Premium Styling */
+    /* 3. BARRA LATERAL (OSCURA ELEGANTE) */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1d29 0%, #252938 100%);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        border-right: 1px solid #2d3748;
     }
-
-    [data-testid="stSidebar"] * {
-        color: #e8eaed !important;
-    }
-
-    [data-testid="stSidebar"] .stMarkdown h3 {
+    /* Textos generales de la barra en blanco */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] .stMarkdown p {
         color: #ffffff !important;
-        font-weight: 700;
-        letter-spacing: -0.5px;
     }
 
-    [data-testid="stSidebar"] .stTextInput label,
-    [data-testid="stSidebar"] .stTextArea label {
-        color: #c9cdd4 !important;
-        font-weight: 500;
-        font-size: 0.875rem;
+    /* ============================================================ */
+    /* 4. EL ARREGLO: CAJAS LATERALES VISIBLES (TARJETAS BLANCAS)   */
+    /* ============================================================ */
+    
+    /* A) DESPLEGABLES (Settings / Source Data) -> Blancos con letra Negra */
+    [data-testid="stSidebar"] .streamlit-expanderHeader {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border-radius: 6px !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    [data-testid="stSidebar"] .streamlit-expanderHeader p, 
+    [data-testid="stSidebar"] .streamlit-expanderHeader span {
+        color: #000000 !important; /* Texto Negro para leerse bien */
+        font-weight: 600 !important;
+    }
+    [data-testid="stSidebar"] .streamlit-expanderHeader svg {
+        fill: #000000 !important; /* Flechita Negra */
+        color: #000000 !important;
+    }
+    /* Contenido al abrirse -> Texto blanco sobre fondo oscuro (o ajustamos si prefieres) */
+    [data-testid="stSidebar"] [data-testid="stExpander"] {
+        background-color: transparent !important;
+        border: none !important;
+        color: #ffffff !important;
     }
 
-    /* Premium Button Styling - Gradient CTAs */
+    /* B) INPUTS (Cajas de escribir) -> Blancas con letra Negra */
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] .stTextArea textarea {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+    }
+
+    /* C) SUBIR ARCHIVOS (Drag & Drop) -> Tarjeta Blanca */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
+        background-color: #ffffff !important;
+        border: 1px dashed #94a3b8 !important;
+    }
+    /* Textos dentro del uploader en negro */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] small,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] div {
+        color: #000000 !important;
+    }
+    /* Botón "Browse files" */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] button {
+        background-color: #f1f5f9 !important;
+        color: #000000 !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    /* ============================================================ */
+    /* 5. ESTILOS PREMIUM RESTO DE LA APP (NO TOCAR)                */
+    /* ============================================================ */
+
+    /* Botones con Degradado */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
@@ -102,40 +151,24 @@ st.markdown("""
         border-radius: 12px !important;
         padding: 0.75rem 2rem !important;
         font-weight: 600 !important;
-        font-size: 1rem !important;
-        letter-spacing: 0.3px !important;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
         transition: all 0.3s ease !important;
-        text-transform: none !important;
     }
-
     .stButton > button:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
     }
 
-    .stButton > button:active {
-        transform: translateY(0px) !important;
-    }
-
-    /* Download Buttons - Secondary Style */
+    /* Botones de Descarga */
     .stDownloadButton > button {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
-        padding: 0.6rem 1.5rem !important;
-        font-weight: 600 !important;
         box-shadow: 0 3px 12px rgba(245, 87, 108, 0.3) !important;
-        transition: all 0.3s ease !important;
     }
 
-    .stDownloadButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4) !important;
-    }
-
-    /* Card Styling for Results */
+    /* Tarjetas de Estrategia */
     .strategy-card {
         background: white;
         border-radius: 12px;
@@ -143,15 +176,13 @@ st.markdown("""
         margin: 0.75rem 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
+    }
+    /* Textos dentro de tarjetas siempre oscuros */
+    .strategy-card div, .result-card div {
+        color: #1f2937 !important;
     }
 
-    .strategy-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-        border-color: #667eea;
-    }
-
+    /* Tarjeta de Resultados Grande */
     .result-card {
         background: white;
         border-radius: 16px;
@@ -161,14 +192,11 @@ st.markdown("""
         border: 1px solid #e5e7eb;
     }
 
-    /* Header Styling */
-    h1, h2, h3 {
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.8px !important;
+    /* Títulos Principales */
+    .main h1, .main h2, .main h3 {
         color: #1a1d29 !important;
+        font-family: 'Inter', sans-serif !important;
     }
-
     h1 {
         font-size: 3rem !important;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -177,164 +205,27 @@ st.markdown("""
         background-clip: text;
     }
 
-    /* Metric Cards */
+    /* Métricas */
     [data-testid="stMetric"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     }
+    [data-testid="stMetric"] label { color: rgba(255, 255, 255, 0.9) !important; }
+    [data-testid="stMetric"] [data-testid="stMetricValue"] { color: white !important; }
 
-    [data-testid="stMetric"] label {
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-weight: 600 !important;
-    }
-
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {
-        color: white !important;
-        font-size: 2.5rem !important;
-        font-weight: 800 !important;
-    }
-
-    /* Info/Success/Warning Boxes */
-    .stAlert {
-        border-radius: 12px !important;
-        border: none !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-    }
-
-    /* Expander Styling */
-    .streamlit-expanderHeader {
-        background: rgba(102, 126, 234, 0.1) !important;
-        border-radius: 10px !important;
-        font-weight: 600 !important;
-        color: white !important;
-    }
-
-    [data-testid="stExpander"] {
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        overflow: hidden;
-    }
-
-    /* Input Fields */
-    .stTextInput > div > div > input,
-    .stTextArea textarea {
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-
-    .stTextInput > div > div > input:focus,
-    .stTextArea textarea:focus {
-        border-color: #667eea !important;
-        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
-    }
-
-    /* Tabs Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: transparent;
-    }
-
+    /* Pestañas (Tabs) */
     .stTabs [data-baseweb="tab"] {
         background: white;
         border-radius: 10px 10px 0 0;
-        padding: 12px 24px;
         font-weight: 600;
         border: 1px solid #e5e7eb;
-        border-bottom: none;
+        color: #000000 !important;
     }
-
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-color: transparent;
-    }
-
-    /* Progress Bar */
-    .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
-    }
-
-    /* Checkbox Styling */
-    .stCheckbox {
-        padding: 0.5rem 0;
-    }
-
-    /* File Uploader */
-    [data-testid="stFileUploader"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        padding: 1rem;
-        border: 2px dashed rgba(255, 255, 255, 0.2);
-    }
-
-    /* Status Container */
-    .stStatus {
-        background: white !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-    }
-
-    /* Divider */
-    hr {
-        margin: 2rem 0;
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-    }
-
-    /* Container Borders */
-    .element-container {
-        border-radius: 8px;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    }
-/* --- PARCHE PARA QUE SE VEAN LAS CAJAS LATERALES --- */
-    
-    /* 1. Pone el fondo de "Settings" y "Source Data" en oscuro */
-    [data-testid="stSidebar"] .streamlit-expanderHeader {
-        background-color: #252938 !important; /* Azul oscuro */
-        color: #ffffff !important;             /* Texto blanco */
-        border: 1px solid #4b5563 !important;
-    }
-    
-    /* 2. Fuerza que las letras del título sean blancas */
-    [data-testid="stSidebar"] .streamlit-expanderHeader p,
-    [data-testid="stSidebar"] .streamlit-expanderHeader span {
-        color: #ffffff !important;
-    }
-    
-    /* 3. Pone el fondo de la caja de "Upload Titles" en oscuro */
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
-        background-color: #252938 !important;
-    }
-    
-    /* 4. Arregla el texto pequeño dentro del uploader */
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] small {
-        color: #e2e8f0 !important;
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
