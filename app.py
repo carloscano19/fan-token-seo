@@ -52,8 +52,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ============================================================================
-# PREMIUM FINTECH/SAAS CSS STYLING
+# PREMIUM DARK BLUE THEME CSS
 # ============================================================================
 
 st.markdown("""
@@ -64,252 +63,119 @@ st.markdown("""
     /* Global Font Application */
     html, body, [class*="css"], .stApp {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #ffffff !important;
     }
 
-    /* Main App Background - Subtle Gradient */
+    /* 1. Fondo Principal (Main Background) - Azul Oscuro Profundo */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f9fafb 100%);
+        background-color: #0f1117; /* Fondo muy oscuro */
+        background-image: radial-gradient(circle at 50% 0%, #1a1f2e 0%, #0f1117 100%);
     }
 
-    /* Sidebar Premium Styling */
+    /* 2. Sidebar Premium Styling - Azul Noche */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1d29 0%, #252938 100%);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        background-color: #0a0c10;
+        border-right: 1px solid #1f2937;
     }
 
+    /* Forzar textos de la Sidebar a blanco */
     [data-testid="stSidebar"] * {
-        color: #e8eaed !important;
+        color: #e0e7ff !important;
     }
 
+    /* Títulos en Sidebar */
     [data-testid="stSidebar"] .stMarkdown h3 {
         color: #ffffff !important;
         font-weight: 700;
         letter-spacing: -0.5px;
     }
 
-    [data-testid="stSidebar"] .stTextInput label,
-    [data-testid="stSidebar"] .stTextArea label {
-        color: #c9cdd4 !important;
-        font-weight: 500;
-        font-size: 0.875rem;
+    /* 3. Estilo de Inputs (Cajas de texto) - Adaptadas a modo oscuro */
+    .stTextInput > div > div > input,
+    .stTextArea textarea {
+        background-color: #1f2937 !important; /* Fondo gris azulado oscuro */
+        color: #ffffff !important; /* Texto blanco al escribir */
+        border: 1px solid #374151 !important;
+        border-radius: 10px !important;
     }
 
-    /* Premium Button Styling - Gradient CTAs */
+    .stTextInput > div > div > input:focus,
+    .stTextArea textarea:focus {
+        border-color: #6366f1 !important; /* Borde índigo al hacer click */
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+    }
+    
+    /* Etiquetas de los inputs */
+    label, .stTextInput label, .stTextArea label {
+        color: #9ca3af !important; /* Gris claro para las etiquetas */
+    }
+
+    /* 4. Botones Premium - Gradient Blue/Purple */
     .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 12px !important;
         padding: 0.75rem 2rem !important;
         font-weight: 600 !important;
-        font-size: 1rem !important;
-        letter-spacing: 0.3px !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4) !important;
         transition: all 0.3s ease !important;
-        text-transform: none !important;
     }
 
     .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5) !important;
     }
 
-    .stButton > button:active {
-        transform: translateY(0px) !important;
-    }
-
-    /* Download Buttons - Secondary Style */
-    .stDownloadButton > button {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 10px !important;
-        padding: 0.6rem 1.5rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 3px 12px rgba(245, 87, 108, 0.3) !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .stDownloadButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4) !important;
-    }
-
-    /* Card Styling for Results */
+    /* 5. Tarjetas de Estrategia (Strategy Cards) - Modo Oscuro */
     .strategy-card {
-        background: white;
+        background: #1f2937; /* Gris azulado oscuro */
         border-radius: 12px;
         padding: 1.25rem;
         margin: 0.75rem 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
+        border: 1px solid #374151;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .strategy-card h3, .strategy-card p, .strategy-card strong {
+        color: #ffffff !important;
     }
 
-    .strategy-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-        border-color: #667eea;
-    }
-
-    .result-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        margin: 1.5rem 0;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e5e7eb;
-    }
-
-    /* Header Styling */
+    /* 6. Títulos Principales */
     h1, h2, h3 {
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.8px !important;
-        color: #1a1d29 !important;
+        color: #ffffff !important;
     }
 
     h1 {
-        font-size: 3rem !important;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
-    /* Metric Cards */
+    /* 7. Métricas y Status */
     [data-testid="stMetric"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    [data-testid="stMetric"] label {
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-weight: 600 !important;
-    }
-
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {
-        color: white !important;
-        font-size: 2.5rem !important;
-        font-weight: 800 !important;
-    }
-
-    /* Info/Success/Warning Boxes */
-    .stAlert {
-        border-radius: 12px !important;
-        border: none !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-    }
-
-    /* Expander Styling */
-    .streamlit-expanderHeader {
-        background: rgba(102, 126, 234, 0.1) !important;
-        border-radius: 10px !important;
-        font-weight: 600 !important;
-        color: white !important;
-    }
-
-    [data-testid="stExpander"] {
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        overflow: hidden;
-    }
-
-    /* Input Fields */
-    .stTextInput > div > div > input,
-    .stTextArea textarea {
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-
-    .stTextInput > div > div > input:focus,
-    .stTextArea textarea:focus {
-        border-color: #667eea !important;
-        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
-    }
-
-    /* Tabs Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: transparent;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        background: white;
-        border-radius: 10px 10px 0 0;
-        padding: 12px 24px;
-        font-weight: 600;
-        border: 1px solid #e5e7eb;
-        border-bottom: none;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-color: transparent;
-    }
-
-    /* Progress Bar */
-    .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
-    }
-
-    /* Checkbox Styling */
-    .stCheckbox {
-        padding: 0.5rem 0;
-    }
-
-    /* File Uploader */
-    [data-testid="stFileUploader"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
+        background: #1f2937;
         padding: 1rem;
-        border: 2px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        border: 1px solid #374151;
+    }
+    [data-testid="stMetricValue"] {
+        color: #818cf8 !important; /* Color índigo claro para el número */
     }
 
-    /* Status Container */
-    .stStatus {
-        background: white !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-    }
-
-    /* Divider */
-    hr {
-        margin: 2rem 0;
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-    }
-
-    /* Container Borders */
-    .element-container {
-        border-radius: 8px;
-    }
-
-    /* Custom Scrollbar */
+    /* 8. Scrollbar Personalizado (Para que no salga blanco feo) */
     ::-webkit-scrollbar {
         width: 10px;
         height: 10px;
+        background: #0f1117;
     }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
+        background: #374151;
+        border-radius: 5px;
     }
-
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        background: #4b5563;
     }
 </style>
 """, unsafe_allow_html=True)
