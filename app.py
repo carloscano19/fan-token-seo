@@ -311,6 +311,31 @@ st.markdown("""
     ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
+/* --- PARCHE PARA QUE SE VEAN LAS CAJAS LATERALES --- */
+    
+    /* 1. Pone el fondo de "Settings" y "Source Data" en oscuro */
+    [data-testid="stSidebar"] .streamlit-expanderHeader {
+        background-color: #252938 !important; /* Azul oscuro */
+        color: #ffffff !important;             /* Texto blanco */
+        border: 1px solid #4b5563 !important;
+    }
+    
+    /* 2. Fuerza que las letras del título sean blancas */
+    [data-testid="stSidebar"] .streamlit-expanderHeader p,
+    [data-testid="stSidebar"] .streamlit-expanderHeader span {
+        color: #ffffff !important;
+    }
+    
+    /* 3. Pone el fondo de la caja de "Upload Titles" en oscuro */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
+        background-color: #252938 !important;
+    }
+    
+    /* 4. Arregla el texto pequeño dentro del uploader */
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] small {
+        color: #e2e8f0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
