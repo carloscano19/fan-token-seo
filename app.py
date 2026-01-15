@@ -104,6 +104,7 @@ st.markdown("""
         background-color: #252938 !important; /* Fondo oscuro */
         color: #ffffff !important;             /* Texto blanco */
         border: 1px solid #4b5563 !important;  /* Borde gris */
+        border-radius: 8px !important;
     }
     
     /* Aseguramos que el texto dentro del header sea blanco */
@@ -211,117 +212,4 @@ st.markdown("""
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    [data-testid="stMetric"] label {
-        color: rgba(255, 255, 255, 0.9) !important;
-    }
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {
-        color: white !important;
-    }
-
-    /* Tabs Styling */
-    .stTabs [data-baseweb="tab"] {
-        background: white;
-        border-radius: 10px 10px 0 0;
-        padding: 12px 24px;
-        font-weight: 600;
-        border: 1px solid #e5e7eb;
-        color: #000000 !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# ============================================================================
-# INITIALIZE SESSION STATE
-# ============================================================================
-
-if "generated_strategies" not in st.session_state:
-    st.session_state.generated_strategies = []
-
-if "selected_strategies" not in st.session_state:
-    st.session_state.selected_strategies = []
-
-if "generated_briefs" not in st.session_state:
-    st.session_state.generated_briefs = {}
-
-# ============================================================================
-# HELPER FUNCTIONS - FILE PROCESSING
-# ============================================================================
-
-def load_titles_from_file(uploaded_file):
-    """Load titles from CSV or Excel file."""
-    if uploaded_file is None:
-        return []
-
-    try:
-        # Check file type
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(uploaded_file)
-        else:
-            st.error("Unsupported file format. Please use CSV or Excel.")
-            return []
-
-        # Get the first column as titles
-        if len(df.columns) > 0:
-            titles = df.iloc[:, 0].dropna().astype(str).tolist()
-            return [title.strip() for title in titles if title.strip()]
-        return []
-
-    except Exception as e:
-        st.error(f"Error reading file: {e}")
-        return []
-
-def load_guidelines_from_file(uploaded_file):
-    """Load guidelines from TXT or MD file."""
-    if uploaded_file is None:
-        return ""
-
-    try:
-        # Read the file content
-        content = uploaded_file.read().decode('utf-8')
-        return content
-    except Exception as e:
-        st.error(f"Error reading file: {e}")
-        return ""
-
-def combine_titles(file_titles, manual_titles):
-    """Combine titles from file and manual input, removing duplicates."""
-    all_titles = []
-
-    # Add file titles
-    all_titles.extend(file_titles)
-
-    # Add manual titles (one per line)
-    if manual_titles.strip():
-        manual_list = [title.strip() for title in manual_titles.split('\n') if title.strip()]
-        all_titles.extend(manual_list)
-
-    # Remove duplicates while preserving order
-    seen = set()
-    unique_titles = []
-    for title in all_titles:
-        title_lower = title.lower()
-        if title_lower not in seen:
-            seen.add(title_lower)
-            unique_titles.append(title)
-
-    return unique_titles
-
-def combine_guidelines(file_content, manual_content):
-    """Combine guidelines from file and manual input."""
-    combined = []
-
-    if file_content.strip():
-        combined.append(file_content.strip())
-
-    if manual_content.strip():
-        combined.append(manual_content.strip())
-
-    return "\
+        box-shadow:
