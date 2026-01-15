@@ -53,16 +53,14 @@ st.set_page_config(
 )
 
 # ============================================================================
-# PREMIUM FINTECH CSS STYLING (FULL VERSION + FIX)
+# ESTILOS CSS (DISEÑO FINAL ARREGLADO)
 # ============================================================================
 
 st.markdown("""
 <style>
-    /* 1. FUENTES GLOBALES */
+    /* 1. Importar Fuente Inter */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-    html, body, [class*="css"], .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+    html, body, [class*="css"], .stApp { font-family: 'Inter', sans-serif; }
 
     /* 2. FONDO PRINCIPAL (CLARO) */
     .stApp {
@@ -70,162 +68,109 @@ st.markdown("""
         color: #000000 !important;
     }
 
-    /* 3. BARRA LATERAL (OSCURA ELEGANTE) */
+    /* 3. BARRA LATERAL (OSCURA) */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a1d29 0%, #252938 100%);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         border-right: 1px solid #2d3748;
     }
-    /* Textos generales de la barra en blanco */
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] .stMarkdown p {
+    /* Títulos sueltos de la sidebar en blanco */
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
 
-    /* ============================================================ */
-    /* 4. EL ARREGLO: CAJAS LATERALES VISIBLES (TARJETAS BLANCAS)   */
-    /* ============================================================ */
+    /* ================================================================= */
+    /* 4. SOLUCIÓN FINAL: TARJETAS BLANCAS FIJAS EN SIDEBAR */
+    /* ================================================================= */
     
-    /* A) DESPLEGABLES (Settings / Source Data) -> Blancos con letra Negra */
-    [data-testid="stSidebar"] .streamlit-expanderHeader {
+    /* Forzamos "Settings" y "Source Data" a ser BLANCOS con texto NEGRO SIEMPRE */
+    /* Usamos !important en todos los estados (hover, focus) para que no parpadee */
+    
+    [data-testid="stSidebar"] .streamlit-expanderHeader,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:active,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:focus {
         background-color: #ffffff !important;
         color: #000000 !important;
-        border-radius: 6px !important;
-        border: 1px solid #e2e8f0 !important;
-    }
-    [data-testid="stSidebar"] .streamlit-expanderHeader p, 
-    [data-testid="stSidebar"] .streamlit-expanderHeader span {
-        color: #000000 !important; /* Texto Negro para leerse bien */
-        font-weight: 600 !important;
-    }
-    [data-testid="stSidebar"] .streamlit-expanderHeader svg {
-        fill: #000000 !important; /* Flechita Negra */
-        color: #000000 !important;
-    }
-    /* Contenido al abrirse -> Texto blanco sobre fondo oscuro (o ajustamos si prefieres) */
-    [data-testid="stSidebar"] [data-testid="stExpander"] {
-        background-color: transparent !important;
-        border: none !important;
-        color: #ffffff !important;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        opacity: 1 !important;
     }
 
-    /* B) INPUTS (Cajas de escribir) -> Blancas con letra Negra */
+    /* Textos e iconos dentro de la caja: SIEMPRE NEGROS */
+    [data-testid="stSidebar"] .streamlit-expanderHeader p,
+    [data-testid="stSidebar"] .streamlit-expanderHeader span,
+    [data-testid="stSidebar"] .streamlit-expanderHeader svg,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover p,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover span,
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover svg {
+        color: #000000 !important;
+        fill: #000000 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Inputs (Cajas de escribir) -> Blancas */
     [data-testid="stSidebar"] .stTextInput input,
     [data-testid="stSidebar"] .stTextArea textarea {
         background-color: #ffffff !important;
         color: #000000 !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 6px !important;
+        border: 1px solid #ccc !important;
     }
 
-    /* C) SUBIR ARCHIVOS (Drag & Drop) -> Tarjeta Blanca */
+    /* File Uploader (Subir archivos) -> Blanco */
     [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
         background-color: #ffffff !important;
-        border: 1px dashed #94a3b8 !important;
     }
-    /* Textos dentro del uploader en negro */
+    /* Todo texto dentro del uploader en negro */
     [data-testid="stSidebar"] [data-testid="stFileUploader"] span,
     [data-testid="stSidebar"] [data-testid="stFileUploader"] small,
     [data-testid="stSidebar"] [data-testid="stFileUploader"] div {
         color: #000000 !important;
     }
-    /* Botón "Browse files" */
-    [data-testid="stSidebar"] [data-testid="stFileUploader"] button {
-        background-color: #f1f5f9 !important;
-        color: #000000 !important;
-        border: 1px solid #cbd5e1 !important;
-    }
 
-    /* ============================================================ */
-    /* 5. ESTILOS PREMIUM RESTO DE LA APP (NO TOCAR)                */
-    /* ============================================================ */
-
-    /* Botones con Degradado */
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 2rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
-        transition: all 0.3s ease !important;
-    }
-    .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
-    }
-
-    /* Botones de Descarga */
-    .stDownloadButton > button {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 10px !important;
-        box-shadow: 0 3px 12px rgba(245, 87, 108, 0.3) !important;
-    }
-
-    /* Tarjetas de Estrategia */
-    .strategy-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin: 0.75rem 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        border: 1px solid #e5e7eb;
-    }
-    /* Textos dentro de tarjetas siempre oscuros */
-    .strategy-card div, .result-card div {
-        color: #1f2937 !important;
-    }
-
-    /* Tarjeta de Resultados Grande */
-    .result-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        margin: 1.5rem 0;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e5e7eb;
-    }
-
-    /* Títulos Principales */
-    .main h1, .main h2, .main h3 {
-        color: #1a1d29 !important;
-        font-family: 'Inter', sans-serif !important;
-    }
+    /* ================================================================= */
+    /* 5. RESTO DEL DISEÑO (BOTONES Y TARJETAS) */
+    /* ================================================================= */
+    
+    /* Encabezados principales */
+    .main h1, .main h2, .main h3 { color: #1a1d29 !important; }
     h1 {
-        font-size: 3rem !important;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
-    /* Métricas */
-    [data-testid="stMetric"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Botones Violetas */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
+    }
+
+    /* Tarjetas de contenido */
+    .strategy-card, .result-card {
+        background: white;
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    [data-testid="stMetric"] label { color: rgba(255, 255, 255, 0.9) !important; }
-    [data-testid="stMetric"] [data-testid="stMetricValue"] { color: white !important; }
-
-    /* Pestañas (Tabs) */
-    .stTabs [data-baseweb="tab"] {
-        background: white;
-        border-radius: 10px 10px 0 0;
-        font-weight: 600;
         border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         color: #000000 !important;
     }
+    .strategy-card div, .result-card div { color: #1f2937 !important; }
+    
+    /* Pestañas (Tabs) */
+    .stTabs [data-baseweb="tab"] {
+        background: white; border: 1px solid #e5e7eb; color: #000000 !important;
+    }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
