@@ -550,26 +550,60 @@ with col1:
             st.success(f"✅ {len(selected)} title(s) selected for brief generation")
 
 with col2:
-    st.markdown("### 📄 Step 2: Generate Content Briefs")
+    st.subheader("📄 Step 2: Generate Content Briefs")
     st.markdown("Create detailed, structured content briefs for selected titles.")
 
+    # 1. BOTÓN DE GENERAR (Solo lógica de generación)
     if st.session_state.selected_strategies:
-        if st.button("📝 Generate Briefs for Selected", use_container_width=True, type="primary"):
-            with st.status(f"Generating {len(st.session_state.selected_strategies)} brief(s)...", expanded=True) as status:
-                progress_bar = st.progress(0)
+        if st.button(f"Generate Briefs ({len(st.session_state.selected_strategies)})", type="primary", use_container_width=True):
+            
+            # Barra de progreso
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            for i, title in enumerate(st.session_state.selected_strategies):
+                status_text.text(f"✍️ Writing brief for: {title}...")
+                
+                # Generamos el brief
+                brief = generate_brief(title, brief_template, final_guidelines, api_key_input)
+                
+                # Guardamos en sesión
+                if brief:
+                    st.session_state.generated_briefs[title] = brief
+                
+                # Actualizar barra
+                progress_bar.progress((i + 1) / len(st.session_state.selected_strategies))
 
-                for idx, title in enumerate(st.session_state.selected_strategies):
-                    st.write(f"📝 Generating brief {idx + 1}/{len(st.session_state.selected_strategies)}: {title[:50]}...")
+            status_text.success("✅ All briefs generated successfully!")
+            time.sleep(1) # Pequeña pausa para ver el éxito
+            status_text.empty()
+            progress_bar.empty()
+            st.rerun() # Recargamos para mostrar los resultados abajo
 
-                    brief = generate_brief(title, brief_template, final_guidelines, api_key_input)
-                    if brief:
-                        st.session_state.generated_briefs[title] = brief
+    # 2. VISUALIZACIÓN Y DESCARGAS (Fuera del botón para que se queden fijos)
+    if st.session_state.generated_briefs:
+        st.markdown("---")
+        st.markdown("### 📂 Your Content Briefs")
+        
+        # Iteramos por cada brief generado
+        for title, content in st.session_state.generated_briefs.items():
+            
+            # Creamos el desplegable
+            with st.expander(f"📄 {title}", expanded=False):
+                # Botón de descarga PRIMERO (para que se vea fácil)
+                st.download_button(
+                    label=f"📥 Download '{title[:20]}...'",
+                    data=content,
+                    file_name=f"{title.replace(' ', '_')}.md",
+                    mime="text/markdown",
+                    key=f"btn_{title}"
+                )
+                
+                st.markdown("---")
+                # El contenido del artículo
+                st.markdown(content)
 
-                    progress_bar.progress((idx + 1) / len(st.session_state.selected_strategies))
-
-                if st.session_state.generated_briefs:
-                    status.update(label=f"✅ Generated {len(st.session_state.generated_briefs)} brief(s)!", state="complete")
-    else:
+    elif not st.session_state.selected_strategies:
         st.info("👈 Select strategies from Step 1 to generate briefs")
 
 # ============================================================================
