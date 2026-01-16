@@ -304,7 +304,7 @@ Do not include any additional explanation or commentary."""
 
     try:
         message = client.messages.create(
-            model="claude-haiku-4-20250131",
+            model="claude-3-haiku-20240307",
             max_tokens=1024,
             messages=[
                 {"role": "user", "content": prompt}
@@ -362,7 +362,7 @@ Generate a complete, actionable brief that a writer or LLM can use to create hig
 
     try:
         message = client.messages.create(
-            model="claude-haiku-4-20250131",
+            model="claude-3-haiku-20240307",
             max_tokens=4096,
             messages=[
                 {"role": "user", "content": prompt}
