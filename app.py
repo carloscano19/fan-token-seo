@@ -2,6 +2,7 @@ import streamlit as st
 import anthropic
 import pandas as pd
 import io
+import time
 
 # ============================================================================
 # CONTEXT CONSTANTS
