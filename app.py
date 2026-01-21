@@ -8,10 +8,12 @@ import time
 # CONTEXT CONSTANTS
 # ============================================================================
 
-DEFAULT_GUIDELINES = """AUDIENCE: Active sports fans (NOT investors).
-TONE: Practical, How-To.
-NEGATIVE CONSTRAINTS: NO Investment talk, NO Legal/Regulatory talk, NO Hype words.
-MANDATORY ANGLES: Comparisons (Airline Miles/Patreon), Tech Support, Unboxing, Gamification"""
+DEFAULT_GUIDELINES = """AUDIENCE: [Define your target audience here]
+TONE: [Define tone: Informative, Casual, Professional, etc.]
+CONTENT FOCUS: [What topics or themes to prioritize]
+CONSTRAINTS: [What to avoid or exclude]
+MANDATORY ELEMENTS: [Required angles, comparisons, or frameworks]
+GOALS: [SEO goals, conversion goals, etc.]"""
 
 DEFAULT_TEMPLATE = """## Metadatos
 - Target Audience: [Target]
@@ -41,7 +43,7 @@ DEFAULT_TEMPLATE = """## Metadatos
 # ============================================================================
 
 st.set_page_config(
-    page_title="Fan Token SEO Planner",
+    page_title="SEO Content Strategy Planner",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -248,20 +250,12 @@ def generate_strategies(existing_titles, guidelines, api_key_input):
     if not client:
         return []
 
-    # SAFETY PROMPT: Ensures NO investment advice and NO repetition
-    safety_prompt = """CRITICAL SAFETY CONSTRAINTS:
-1. DO NOT provide investment advice, financial recommendations, or price predictions.
-2. DO NOT repeat or closely mirror any themes from the existing titles provided.
-3. Focus ONLY on the audience and tone specified in the guidelines."""
-
-    prompt = f"""{safety_prompt}
-
-You are an expert SEO strategist.
+    prompt = f"""You are an expert SEO strategist.
 
 EXISTING TITLES (to avoid repetition):
 {existing_titles if existing_titles.strip() else "None provided"}
 
-STRATEGIC GUIDELINES (Target Audience, Tone, Goals):
+STRATEGIC GUIDELINES:
 {guidelines}
 
 Your task: Generate EXACTLY 10 new article titles based STRICTLY on the "STRATEGIC GUIDELINES" provided above.
@@ -270,9 +264,7 @@ Constraints:
 1. The titles must appeal specifically to the AUDIENCE defined in the guidelines.
 2. Adopt the TONE defined in the guidelines completely.
 3. Avoid repeating themes from existing titles.
-4. If the guidelines mention specific topics or keywords, prioritize them.
-5. Follow all NEGATIVE CONSTRAINTS specified in the guidelines.
-6. Incorporate the MANDATORY ANGLES from the guidelines.
+4. If the guidelines mention specific topics, keywords, or constraints, follow them precisely.
 
 Format your response as a numbered list (1-10) with ONLY the titles, one per line.
 Do not include any additional explanation or commentary."""
@@ -307,14 +299,7 @@ def generate_brief(title, template, guidelines, api_key_input):
     if not client:
         return ""
 
-    # SAFETY PROMPT: Ensures NO investment advice
-    safety_prompt = """CRITICAL SAFETY CONSTRAINTS:
-1. DO NOT provide investment advice, financial recommendations, or price predictions.
-2. Follow the guidelines exactly as provided - do not invent a different audience."""
-
-    prompt = f"""{safety_prompt}
-
-You are an expert SEO content strategist creating detailed content briefs.
+    prompt = f"""You are an expert SEO content strategist creating detailed content briefs.
 
 ARTICLE TITLE:
 {title}
@@ -329,11 +314,11 @@ Your task: Create a comprehensive content brief for this article that STRICTLY f
 
 Requirements:
 1. Fill in ALL sections from the template.
-2. Target Audience & Tone: Must match the STRATEGIC GUIDELINES provided exactly. Do not invent a new audience.
+2. Target Audience & Tone: Must match the STRATEGIC GUIDELINES provided exactly.
 3. Create a detailed content outline with multiple H2 sections.
 4. Provide a keywords table relevant to the specific topic.
 5. Add LLM optimization notes on how to write this content based on the guidelines.
-6. Follow all NEGATIVE CONSTRAINTS and MANDATORY ANGLES from the guidelines.
+6. Follow all constraints and requirements specified in the guidelines.
 
 Generate a complete, actionable brief that a writer or LLM can use to create high-quality content."""
 
@@ -360,21 +345,21 @@ st.markdown("""
 <div style='text-align: center; padding: 2rem 0 1rem 0;'>
     <div style='display: inline-flex; align-items: center; gap: 1rem; margin-bottom: 1rem;'>
         <div style='font-size: 3.5rem; filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.3));'>
-            ⚽
+            💎
         </div>
         <h1 style='font-size: 2.8rem; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px;'>
-            Fan Token SEO Planner
+            SEO Strategy Planner
         </h1>
     </div>
     <p style='font-size: 1.15rem; color: #6b7280; margin-top: 0.5rem; font-weight: 500;'>
-        AI-Powered Content Strategy for Sports Fans
+        AI-Powered Content Strategy Generator
     </p>
     <div style='display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; font-size: 0.9rem; color: #9ca3af;'>
         <span>⚡ Claude Haiku</span>
         <span>•</span>
         <span>🎯 SEO Optimized</span>
         <span>•</span>
-        <span>⚽ Fan-First</span>
+        <span>📊 Data-Driven</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -634,7 +619,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #888; font-size: 0.9rem; padding: 1rem 0;'>
     <p>
-        Fan Token SEO Planner | Powered by
+        SEO Strategy Planner | Powered by
         <a href='https://www.anthropic.com/' target='_blank' style='color: #666; text-decoration: none;'>
             Claude Haiku
         </a>
