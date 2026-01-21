@@ -8,14 +8,10 @@ import time
 # CONTEXT CONSTANTS
 # ============================================================================
 
-# CAMBIO 1: Guidelines por defecto genéricas para que no te molesten
-DEFAULT_GUIDELINES = """AUDIENCE: [Define tu audiencia aquí, ej: Fans casuales, Inversores, Gamers...]
-KEY USP: [Puntos de venta clave]
-NARRATIVE: [La narrativa principal o ángulo de la historia]
-AVOID: [Temas o palabras a evitar]
-USE: [Palabras clave o conceptos obligatorios]
-TONE: [Ej: Informativo, Divertido, Serio, Urgente...]
-GOALS: [Objetivo del contenido]"""
+DEFAULT_GUIDELINES = """AUDIENCE: Active sports fans (NOT investors).
+TONE: Practical, How-To.
+NEGATIVE CONSTRAINTS: NO Investment talk, NO Legal/Regulatory talk, NO Hype words.
+MANDATORY ANGLES: Comparisons (Airline Miles/Patreon), Tech Support, Unboxing, Gamification"""
 
 DEFAULT_TEMPLATE = """## Metadatos
 - Target Audience: [Target]
@@ -45,7 +41,7 @@ DEFAULT_TEMPLATE = """## Metadatos
 # ============================================================================
 
 st.set_page_config(
-    page_title="SEO Content Strategy Planner",
+    page_title="Fan Token SEO Planner",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -73,12 +69,12 @@ st.markdown("""
     }
 
     /* 4. TEXTOS DE LA BARRA LATERAL */
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3, 
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] label, 
-    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] div {
         color: #111827 !important;
     }
@@ -141,7 +137,7 @@ st.markdown("""
         padding: 1.5rem;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    
+
     /* 10. TÍTULOS */
     h1 {
         color: #111827 !important;
@@ -206,7 +202,7 @@ def combine_titles(file_titles, manual_titles):
     if manual_titles.strip():
         manual_list = [title.strip() for title in manual_titles.split('\n') if title.strip()]
         all_titles.extend(manual_list)
-    
+
     seen = set()
     unique_titles = []
     for title in all_titles:
@@ -229,6 +225,7 @@ def combine_guidelines(file_content, manual_content):
 # ============================================================================
 
 def get_anthropic_client(api_key_input):
+    """Verify and return Anthropic client with user API key."""
     if api_key_input and api_key_input.strip():
         try:
             return anthropic.Anthropic(api_key=api_key_input.strip())
@@ -245,14 +242,21 @@ def get_anthropic_client(api_key_input):
     st.stop()
     return None
 
-# CAMBIO 2: Eliminado el sesgo de inversor. Ahora obedece a 'guidelines'.
 def generate_strategies(existing_titles, guidelines, api_key_input):
     """Generate 10 new content strategy titles based strictly on user guidelines."""
     client = get_anthropic_client(api_key_input)
     if not client:
         return []
 
-    prompt = f"""You are an expert SEO strategist.
+    # SAFETY PROMPT: Ensures NO investment advice and NO repetition
+    safety_prompt = """CRITICAL SAFETY CONSTRAINTS:
+1. DO NOT provide investment advice, financial recommendations, or price predictions.
+2. DO NOT repeat or closely mirror any themes from the existing titles provided.
+3. Focus ONLY on the audience and tone specified in the guidelines."""
+
+    prompt = f"""{safety_prompt}
+
+You are an expert SEO strategist.
 
 EXISTING TITLES (to avoid repetition):
 {existing_titles if existing_titles.strip() else "None provided"}
@@ -267,6 +271,8 @@ Constraints:
 2. Adopt the TONE defined in the guidelines completely.
 3. Avoid repeating themes from existing titles.
 4. If the guidelines mention specific topics or keywords, prioritize them.
+5. Follow all NEGATIVE CONSTRAINTS specified in the guidelines.
+6. Incorporate the MANDATORY ANGLES from the guidelines.
 
 Format your response as a numbered list (1-10) with ONLY the titles, one per line.
 Do not include any additional explanation or commentary."""
@@ -295,14 +301,20 @@ Do not include any additional explanation or commentary."""
         st.error(f"Error generating strategies: {e}")
         return []
 
-# CAMBIO 3: Eliminado el sesgo en la generación de briefs.
 def generate_brief(title, template, guidelines, api_key_input):
     """Generate a full content brief strictly following user guidelines and template."""
     client = get_anthropic_client(api_key_input)
     if not client:
         return ""
 
-    prompt = f"""You are an expert SEO content strategist creating detailed content briefs.
+    # SAFETY PROMPT: Ensures NO investment advice
+    safety_prompt = """CRITICAL SAFETY CONSTRAINTS:
+1. DO NOT provide investment advice, financial recommendations, or price predictions.
+2. Follow the guidelines exactly as provided - do not invent a different audience."""
+
+    prompt = f"""{safety_prompt}
+
+You are an expert SEO content strategist creating detailed content briefs.
 
 ARTICLE TITLE:
 {title}
@@ -321,7 +333,7 @@ Requirements:
 3. Create a detailed content outline with multiple H2 sections.
 4. Provide a keywords table relevant to the specific topic.
 5. Add LLM optimization notes on how to write this content based on the guidelines.
-6. Do NOT assume this is for investors unless the guidelines explicitly say so.
+6. Follow all NEGATIVE CONSTRAINTS and MANDATORY ANGLES from the guidelines.
 
 Generate a complete, actionable brief that a writer or LLM can use to create high-quality content."""
 
@@ -348,21 +360,21 @@ st.markdown("""
 <div style='text-align: center; padding: 2rem 0 1rem 0;'>
     <div style='display: inline-flex; align-items: center; gap: 1rem; margin-bottom: 1rem;'>
         <div style='font-size: 3.5rem; filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.3));'>
-            💎
+            ⚽
         </div>
         <h1 style='font-size: 2.8rem; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px;'>
-            SEO Strategy Planner
+            Fan Token SEO Planner
         </h1>
     </div>
     <p style='font-size: 1.15rem; color: #6b7280; margin-top: 0.5rem; font-weight: 500;'>
-        AI-Powered Content Strategy Generator
+        AI-Powered Content Strategy for Sports Fans
     </p>
     <div style='display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; font-size: 0.9rem; color: #9ca3af;'>
-        <span>⚡ Claude Haiku 4</span>
+        <span>⚡ Claude Haiku</span>
         <span>•</span>
         <span>🎯 SEO Optimized</span>
         <span>•</span>
-        <span>📊 Data-Driven</span>
+        <span>⚽ Fan-First</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -438,109 +450,162 @@ with st.sidebar:
         )
 
 # ============================================================================
-# MAIN CONTENT AREA
+# MAIN CONTENT AREA - TWO TABS
 # ============================================================================
 
-col1, col2 = st.columns([1, 1], gap="large")
+tab1, tab2 = st.tabs(["🚀 Strategy Generator", "✍️ Manual Brief Creator"])
 
-with col1:
-    st.markdown("### 🚀 Step 1: Generate Strategy Ideas")
-    st.markdown("Generate 10 AI-powered article titles based on your guidelines.")
+# ============================================================================
+# TAB 1: STRATEGY GENERATOR
+# ============================================================================
 
-    if st.button("🎲 Generate 10 New Strategies", use_container_width=True, type="primary"):
-        existing_titles_str = "\n".join(all_titles) if all_titles else ""
+with tab1:
+    st.markdown("### Generate AI-Powered Content Strategies")
+    st.markdown("Generate 10 article titles based on your guidelines, then select titles to create detailed briefs.")
 
-        with st.status("Generating strategies...", expanded=True) as status:
-            st.write("🔍 Analyzing existing content...")
-            st.write("🤖 Consulting Claude Haiku...")
-            st.write("✨ Generating unique titles based on your custom guidelines...")
+    col1, col2 = st.columns([1, 1], gap="large")
 
-            strategies = generate_strategies(existing_titles_str, final_guidelines, api_key_input)
+    with col1:
+        st.markdown("#### Step 1: Generate Strategy Ideas")
 
-            if strategies:
-                st.session_state.generated_strategies = strategies
-                st.session_state.selected_strategies = []
-                st.session_state.generated_briefs = {}
-                status.update(label="✅ Generation complete!", state="complete")
-            else:
-                status.update(label="❌ Generation failed", state="error")
+        if st.button("🎲 Generate 10 New Strategies", use_container_width=True, type="primary", key="gen_strategies"):
+            existing_titles_str = "\n".join(all_titles) if all_titles else ""
 
-    if st.session_state.generated_strategies:
-        st.markdown("---")
-        st.markdown("#### 📋 Generated Titles")
-        st.info("Select the titles you want to create detailed briefs for")
+            with st.status("Generating strategies...", expanded=True) as status:
+                st.write("🔍 Analyzing existing content...")
+                st.write("🤖 Consulting Claude Haiku...")
+                st.write("✨ Generating unique titles based on your guidelines...")
 
-        selected = []
-        for idx, title in enumerate(st.session_state.generated_strategies):
-            st.markdown(f"""
-            <div class="strategy-card">
-                <div style="display: flex; align-items: start; gap: 1rem;">
-                    <div style="font-weight: 700; color: #667eea; font-size: 1.1rem; min-width: 30px;">
-                        {idx + 1}.
-                    </div>
-                    <div style="flex: 1; font-size: 0.95rem; line-height: 1.6; color: #1f2937;">
-                        {title}
+                strategies = generate_strategies(existing_titles_str, final_guidelines, api_key_input)
+
+                if strategies:
+                    st.session_state.generated_strategies = strategies
+                    st.session_state.selected_strategies = []
+                    st.session_state.generated_briefs = {}
+                    status.update(label="✅ Generation complete!", state="complete")
+                else:
+                    status.update(label="❌ Generation failed", state="error")
+
+        if st.session_state.generated_strategies:
+            st.markdown("---")
+            st.markdown("#### 📋 Generated Titles")
+            st.info("Select the titles you want to create detailed briefs for")
+
+            selected = []
+            for idx, title in enumerate(st.session_state.generated_strategies):
+                st.markdown(f"""
+                <div class="strategy-card">
+                    <div style="display: flex; align-items: start; gap: 1rem;">
+                        <div style="font-weight: 700; color: #667eea; font-size: 1.1rem; min-width: 30px;">
+                            {idx + 1}.
+                        </div>
+                        <div style="flex: 1; font-size: 0.95rem; line-height: 1.6; color: #1f2937;">
+                            {title}
+                        </div>
                     </div>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            is_checked = st.checkbox(f"Select this title", key=f"strategy_{idx}", label_visibility="collapsed")
-            if is_checked:
-                selected.append(title)
+                """, unsafe_allow_html=True)
 
-        st.session_state.selected_strategies = selected
-        if selected:
-            st.success(f"✅ {len(selected)} title(s) selected for brief generation")
+                is_checked = st.checkbox(f"Select this title", key=f"strategy_{idx}", label_visibility="collapsed")
+                if is_checked:
+                    selected.append(title)
 
-with col2:
-    st.subheader("📄 Step 2: Generate Content Briefs")
-    st.markdown("Create detailed, structured content briefs for selected titles.")
+            st.session_state.selected_strategies = selected
+            if selected:
+                st.success(f"✅ {len(selected)} title(s) selected for brief generation")
 
-    if st.session_state.selected_strategies:
-        if st.button(f"Generate Briefs ({len(st.session_state.selected_strategies)})", type="primary", use_container_width=True):
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            for i, title in enumerate(st.session_state.selected_strategies):
-                status_text.text(f"✍️ Writing brief for: {title}...")
-                brief = generate_brief(title, brief_template, final_guidelines, api_key_input)
-                
-                if brief:
-                    st.session_state.generated_briefs[title] = brief
-                
-                progress_bar.progress((i + 1) / len(st.session_state.selected_strategies))
+    with col2:
+        st.markdown("#### Step 2: Generate Content Briefs")
 
-            status_text.success("✅ All briefs generated successfully!")
-            time.sleep(1)
-            status_text.empty()
-            progress_bar.empty()
-            st.rerun()
+        if st.session_state.selected_strategies:
+            if st.button(f"📄 Generate Briefs ({len(st.session_state.selected_strategies)})", type="primary", use_container_width=True, key="gen_briefs"):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
 
-    if st.session_state.generated_briefs:
-        st.markdown("---")
-        st.markdown("### 📂 Your Content Briefs")
-        for title, content in st.session_state.generated_briefs.items():
-            with st.expander(f"📄 {title}", expanded=False):
-                st.download_button(
-                    label=f"📥 Download '{title[:20]}...'",
-                    data=content,
-                    file_name=f"{title.replace(' ', '_')}.md",
-                    mime="text/markdown",
-                    key=f"btn_{title}"
-                )
-                st.markdown("---")
-                st.markdown(content)
-    elif not st.session_state.selected_strategies:
-        st.info("👈 Select strategies from Step 1 to generate briefs")
+                for i, title in enumerate(st.session_state.selected_strategies):
+                    status_text.text(f"✍️ Writing brief for: {title}...")
+                    brief = generate_brief(title, brief_template, final_guidelines, api_key_input)
+
+                    if brief:
+                        st.session_state.generated_briefs[title] = brief
+
+                    progress_bar.progress((i + 1) / len(st.session_state.selected_strategies))
+
+                status_text.success("✅ All briefs generated successfully!")
+                time.sleep(1)
+                status_text.empty()
+                progress_bar.empty()
+                st.rerun()
+
+        if st.session_state.generated_briefs:
+            st.markdown("---")
+            st.markdown("#### 📂 Your Content Briefs")
+            for title, content in st.session_state.generated_briefs.items():
+                with st.expander(f"📄 {title}", expanded=False):
+                    st.download_button(
+                        label=f"📥 Download '{title[:20]}...'",
+                        data=content,
+                        file_name=f"{title.replace(' ', '_')[:50]}.md",
+                        mime="text/markdown",
+                        key=f"btn_{title}"
+                    )
+                    st.markdown("---")
+                    st.markdown(content)
+        elif not st.session_state.selected_strategies:
+            st.info("👈 Select strategies from Step 1 to generate briefs")
 
 # ============================================================================
-# RESULTS DISPLAY
+# TAB 2: MANUAL BRIEF CREATOR
+# ============================================================================
+
+with tab2:
+    st.markdown("### Create a Brief for a Custom Title")
+    st.markdown("Enter any article title and instantly generate a detailed content brief.")
+
+    manual_title = st.text_input(
+        "Article Title",
+        placeholder="Enter your article title here...",
+        help="Type any article title and click Generate to create a brief",
+        key="manual_title_input"
+    )
+
+    if st.button("✨ Generate Brief for This Title", type="primary", use_container_width=True, key="gen_manual_brief"):
+        if manual_title.strip():
+            with st.status("Generating brief...", expanded=True) as status:
+                st.write("🤖 Consulting Claude Haiku...")
+                st.write("✍️ Creating detailed content brief...")
+
+                brief = generate_brief(manual_title.strip(), brief_template, final_guidelines, api_key_input)
+
+                if brief:
+                    status.update(label="✅ Brief generated!", state="complete")
+                    st.markdown("---")
+                    st.markdown("### 📄 Generated Brief")
+                    st.markdown(f"**Title:** {manual_title}")
+
+                    st.download_button(
+                        label="📥 Download Brief (Markdown)",
+                        data=brief,
+                        file_name=f"{manual_title.replace(' ', '_')[:50]}.md",
+                        mime="text/markdown",
+                        use_container_width=True,
+                        key="manual_download"
+                    )
+
+                    st.markdown("---")
+                    st.markdown(brief)
+                else:
+                    status.update(label="❌ Generation failed", state="error")
+        else:
+            st.warning("⚠️ Please enter a title first")
+
+# ============================================================================
+# RESULTS DISPLAY (for Tab 1)
 # ============================================================================
 
 if st.session_state.generated_briefs:
     st.markdown("---")
-    st.markdown("## 📊 Generated Content Briefs")
+    st.markdown("## 📊 Generated Content Briefs Summary")
 
     col_exp1, col_exp2, col_exp3 = st.columns([1, 1, 2])
     with col_exp1:
@@ -557,44 +622,9 @@ if st.session_state.generated_briefs:
                 data=csv,
                 file_name="content_briefs.csv",
                 mime="text/csv",
-                use_container_width=True
+                use_container_width=True,
+                key="download_all_csv"
             )
-
-    st.markdown("---")
-
-    if len(st.session_state.generated_briefs) == 1:
-        title = list(st.session_state.generated_briefs.keys())[0]
-        st.markdown('<div class="result-card">', unsafe_allow_html=True)
-        st.markdown(f"### 📝 {title}")
-        st.markdown(st.session_state.generated_briefs[title])
-        st.download_button(
-            label="💾 Download Brief (Markdown)",
-            data=st.session_state.generated_briefs[title],
-            file_name=f"{title[:50]}.md",
-            mime="text/markdown",
-            use_container_width=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        tab_names = [f"Brief {i+1}" for i in range(len(st.session_state.generated_briefs))]
-        tabs = st.tabs(tab_names)
-        for idx, (title, brief) in enumerate(st.session_state.generated_briefs.items()):
-            with tabs[idx]:
-                st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                st.markdown(f"### 📝 {title}")
-                with st.expander("📄 View Full Brief", expanded=True):
-                    st.markdown(brief)
-                col_dl1, col_dl2 = st.columns([1, 3])
-                with col_dl1:
-                    st.download_button(
-                        label="💾 Download",
-                        data=brief,
-                        file_name=f"{title[:50]}.md",
-                        mime="text/markdown",
-                        key=f"download_{idx}",
-                        use_container_width=True
-                    )
-                st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================================
 # FOOTER
@@ -604,9 +634,9 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #888; font-size: 0.9rem; padding: 1rem 0;'>
     <p>
-        AI SEO Strategy Planner | Powered by
+        Fan Token SEO Planner | Powered by
         <a href='https://www.anthropic.com/' target='_blank' style='color: #666; text-decoration: none;'>
-            Claude Haiku 4
+            Claude Haiku
         </a>
     </p>
 </div>
